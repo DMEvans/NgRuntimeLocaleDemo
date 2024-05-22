@@ -1,0 +1,27 @@
+<div class="container-fluid text-center">
+  <h1>Welcome to the Unit Testing sample application.</h1>
+  <p>
+    <button
+      id="sampleButton"
+      class="btn btn-primary"
+      (click)="changeLocale('en')">
+      English
+    </button>
+
+    <button
+      id="sampleButton"
+      class="btn btn-primary"
+      (click)="changeLocale('fr')">
+      French
+    </button>
+
+    <button
+      id="sampleButton"
+      class="btn btn-primary"
+      (click)="changeLocale('nl')">
+      Dutch
+    </button>
+  </p>
+</div>
+<router-outlet></router-outlet>
+
