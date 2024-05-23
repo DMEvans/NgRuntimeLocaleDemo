@@ -10,14 +10,16 @@ type ShouldReuseRoute = (future: ActivatedRouteSnapshot, curr: ActivatedRouteSna
 })
 export class LocaleService {
   private initialized = false;
+  private currentLang = 'en';
+
 
   get currentLocale(): string {
-    return this.translate.currentLang;
+    return this.currentLang;
   }
 
   constructor(
     private router: Router,
-    private translate: TranslateService,
+    private routeReuseStrategy: RouteReuseStrategy,
     @Optional()
     @SkipSelf()
     otherInstance: LocaleService,
@@ -26,36 +28,26 @@ export class LocaleService {
   }
 
   private setRouteReuse(reuse: ShouldReuseRoute) {
-    this.router.routeReuseStrategy.shouldReuseRoute = reuse;
+    this.routeReuseStrategy.shouldReuseRoute = reuse;
   }
 
-  private subscribeToLangChange() {
-    this.translate.onLangChange.subscribe(async () => {
-      const { shouldReuseRoute } = this.router.routeReuseStrategy;
-
-      this.setRouteReuse(() => false);
-      this.router.navigated = false;
-
-      await this.router.navigateByUrl(this.router.url).catch(noop);
-      this.setRouteReuse(shouldReuseRoute);
-    });
-  }
-
-  initLocale(localeId: string, defaultLocaleId = localeId) {
+  initLocale(localeId: string) {
     if (this.initialized) return;
 
-    this.setDefaultLocale(defaultLocaleId);
     this.setLocale(localeId);
-    this.subscribeToLangChange();
 
     this.initialized = true;
   }
 
-  setDefaultLocale(localeId: string) {
-    this.translate.setDefaultLang(localeId);
-  }
+  public async setLocale(localeId: string) {
+    this.currentLang = localeId;
 
-  setLocale(localeId: string) {
-    this.translate.use(localeId);
+    const { shouldReuseRoute } = this.routeReuseStrategy;
+
+    this.setRouteReuse(() => false);
+    this.router.navigated = false;
+
+    await this.router.navigateByUrl(this.router.url).catch(noop);
+    this.setRouteReuse(shouldReuseRoute);
   }
 }

@@ -9,6 +9,7 @@ import { AppRoutingModule } from "./app-routing.module";
 
 import localeFr from '@angular/common/locales/fr';
 import localeNl from '@angular/common/locales/nl';
+import { RouteReuseStrategy } from "@angular/router";
 registerLocaleData(localeFr);
 registerLocaleData(localeNl);
 
@@ -19,7 +20,10 @@ registerLocaleData(localeNl);
     AppRoutingModule,
     TranslateModule.forRoot()
   ],
-  providers: [ LocaleProvider, DatePipe ],
+  providers: [
+    LocaleProvider,
+    DatePipe
+  ],
   declarations: [
     AppComponent,
     DaysOfWeekComponent
